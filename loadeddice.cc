@@ -4,11 +4,11 @@ using namespace std;
 
 int main(){
 	srand(time(0));
-	float startcrit;
-	cout << "Enter your starting crit amount (1 decimal): ";
+	double startcrit;
+	cout << "Enter your starting crit amount (1 decimal max): ";
 	cin >> startcrit;
 	int sample;
-	cout << "Enter the sample size for the test (default = 100000000): ";
+	cout << "Enter the sample size for the test\n(default = 100000000, very large numbers may cause floating point inaccuracy, use a lower number if it takes too long)\n";
 	cin >> sample;
 	bool debug;
 	cout << "Debug mode? Y/N (NOT RECOMMENDED): ";
@@ -16,11 +16,11 @@ int main(){
 	cin >> c;
 	debug=c=='Y';
 	
-	float total=0;
-	float crit=startcrit;
+	double total=0;
+	double crit=startcrit;
 	for (int i=0; i<sample; ++i){
 		if (debug) cout << crit << endl;
-		total+=crit;
+		total+=crit/sample;
 		int c=rand()%1000;
 		if (c>crit*10) crit*=2;
 		else{
@@ -29,7 +29,6 @@ int main(){
 		}
 	}
 
-	total/=sample;
 	cout << "Average crit rate: " << total << endl;
 	cout << "Average crit gained: " << total-startcrit << endl;
 }
