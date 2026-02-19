@@ -1,4 +1,10 @@
-all: booncalc.exe atkspdcalc.exe critisbad.exe rosibomb.exe
+all: booncalc.exe atkspdcalc.exe critisbad.exe rosibomb.exe loadeddice.exe
+
+loadeddice.exe: loadeddice.o
+	g++ -o loadeddice.exe loadeddice.o
+
+loadeddice.o:
+	g++ -c loadeddice.cc
 
 booncalc.exe: booncalc.o utils/expressioncalc.o
 	g++ -o booncalc.exe booncalc.o utils/expressioncalc.o
