@@ -10,15 +10,23 @@ int main(){
 	int sample;
 	cout << "Enter the sample size for the test (default = 100000000): ";
 	cin >> sample;
+	bool debug;
+	cout << "Debug mode? Y/N (NOT RECOMMENDED): ";
+	char c;
+	cin >> c;
+	debug=c=='Y';
 	
 	float total=0;
 	float crit=startcrit;
 	for (int i=0; i<sample; ++i){
-		//cout << crit << endl;
+		if (debug) cout << crit << endl;
 		total+=crit;
 		int c=rand()%1000;
 		if (c>crit*10) crit*=2;
-		else crit=startcrit;
+		else{
+			crit=startcrit;
+			if (debug) cout << "Crit" << endl;
+		}
 	}
 
 	total/=sample;
