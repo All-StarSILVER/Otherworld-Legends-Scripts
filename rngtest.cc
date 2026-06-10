@@ -1,5 +1,6 @@
 #include <iostream>
 #include <map>
+#include <fstream>
 #include <string>
 using namespace std;
 
@@ -16,14 +17,43 @@ int main(){
     cout << "Enter a number every time an event occurs. The first time a number is entered, you must associate a name to it.\n"
     << "Once you're done entering numbers, enter ! to end the program and get some basic statistics." << endl;
 
-    // MAIN
+    // LOAD FILE
+    cout << "\nLoad previous data? If yes, enter file name, if not, enter 'N': ";
+    string f;
+    cin >> f;
     map<char, int> results;
     map<char, string> translation;
+    int sample=0;
+    if (f!="N"){
+        ifstream stream;
+        stream.open(f, ios::in);
+        stream >> sample;
+        bool end=false;
+        while (!end){
+            string t; char s; int n=0;
+            stream >> s;
+            char tmp;
+            while (stream >> tmp && tmp!=','){
+                n*=10;
+                n+=tmp-'0';
+            }
+            while(!stream.eof() && stream >> tmp && tmp!=','){
+                t.push_back(tmp);
+            }
 
+            results.insert(pair<char, int>(s, n));
+            translation.insert(pair<char, string>(s, t));
+
+            if (stream.eof()) end=true;
+        }
+        stream.close();
+    }
+
+    // MAIN
+    printCurrent(results, translation);
     char r;
     cin >> r;
     
-    int sample=0;
     while (r!='!'){
         map<char, int>::iterator it=results.find(r);
         if (it==results.end()){
@@ -40,19 +70,39 @@ int main(){
     }
 
     // STATS
-    cout << "Sample size: " << sample << endl;
+    cout << "\nSample size: " << sample << endl;
 
-    cout << "TOTALS:" << endl;
+    cout << "\nTOTALS:" << endl;
     map<char, int>::iterator it=results.begin();
     while (it!=results.end()){
         cout << translation[(*it).first] << ": " << (*it).second << endl;
         ++it;
     }
 
-    cout << "PERCENTAGES:" << endl;
+    cout << "\nPERCENTAGES:" << endl;
     it=results.begin();
     while (it!=results.end()){
         cout << translation[(*it).first] << ": " << ((double)(*it).second)/sample*100 << '%' << endl;
         ++it;
+    }
+
+    // SAVE FILE
+    cout << endl << "Enter file to save current state, or enter 'N' to exit: ";
+    cin >> f;
+    if (f!="N"){
+        ofstream stream;
+        stream.open(f, ios::out | ios::trunc);
+        stream << sample << ' ';
+        it=results.begin();
+        bool first=true;
+        while (it!=results.end()){
+            if (first) first=false;
+            else{
+                char tmp=',';
+                stream << tmp;
+            }
+            stream << (*it).first << (*it).second << ',' << translation[(*it).first];
+            ++it;
+        }
     }
 }
