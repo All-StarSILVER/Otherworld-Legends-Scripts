@@ -1,4 +1,4 @@
-all: booncalc.exe atkspdcalc.exe critisbad.exe rosibomb.exe loadeddice.exe
+all: booncalc.exe atkspdcalc.exe critisbad.exe rosibomb.exe loadeddice.exe rngtest.exe
 
 loadeddice.exe: loadeddice.o
 	g++ -o loadeddice.exe loadeddice.o
@@ -26,6 +26,12 @@ rosibomb.o:
 
 utils/expressioncalc.o:
 	cd utils; g++ -c expressioncalc.cc; cd ..;
+
+rngtest.exe: rngtest.o
+	g++ -o rngtest.exe rngtest.o
+
+rngtest.o:
+	g++ -c rngtest.cc
 
 clean:
 	rm *.exe *.o; rm utils/*.o;
